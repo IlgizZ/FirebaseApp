@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "637954410326",
+    "firebase_url": "https://my-frist-app-283ed.firebaseio.com",
+    "project_id": "my-frist-app-283ed",
+    "storage_bucket": "my-frist-app-283ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637954410326:android:4c98428d1db95363",
+        "android_client_info": {
+          "package_name": "ru.innopolis.zamaleev.firebaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637954410326-rjgtlc8rrrm8o2a7n0rsaomcvl8in68k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.innopolis.zamaleev.firebaseapp",
+            "certificate_hash": "10743f24b4fec6c580fabf2f4d14bf4408494666"
+          }
+        },
+        {
+          "client_id": "637954410326-k9r1n2tj6p1bkvob4lbi0rbhc522jvsu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX1FQT8teY5xBoDsBdpznVe5LXHfNnR30"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637954410326-k9r1n2tj6p1bkvob4lbi0rbhc522jvsu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
