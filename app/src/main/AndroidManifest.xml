@@ -7,21 +7,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".EmailPasswordActivity"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EventActivity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".EventCreator"></activity>
+        <activity
+            android:name=".EventActivity"
+             />
+        <activity
+            android:name=".MapActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventCreator"
+            android:screenOrientation="portrait"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 </manifest>

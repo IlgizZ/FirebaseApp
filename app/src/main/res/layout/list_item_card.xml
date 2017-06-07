@@ -77,7 +77,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:fontFamily="sans-serif"
-                    android:text="@string/lorem"
                     android:textSize="14sp"
                     android:textColor="#263238"
                     android:lineSpacingExtra="4dp"
