@@ -25,18 +25,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import ru.innopolis.zamaleev.firebaseapp.R;
+import ru.innopolis.zamaleev.firebaseapp.util.Validator;
 
 public class EventCreator extends AppCompatActivity {
 
-    private Vibrator vib;
-    private Animation animShake;
     private EditText eventCreatorName, eventCreatorCity, eventCreatorDescription;
-    private TextInputLayout eventCreatorLayoutName, eventCreatorLayoutCity, eventCreatorLayoutDescription, eventCreatorLayoutDOB;
+    private TextInputLayout eventCreatorLayoutName, eventCreatorLayoutCity, eventCreatorLayoutDescription;
     private Button btnSignUp, btn_date, btn_time;
     private DateFormat formatDateTime;
     private Calendar dateTime;
     private TextView text;
-
+    private Validator validator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +66,13 @@ public class EventCreator extends AppCompatActivity {
         eventCreatorLayoutName = (TextInputLayout) findViewById(R.id.event_creator_layout_name);
         eventCreatorLayoutCity = (TextInputLayout) findViewById(R.id.event_creator_layout_city);
         eventCreatorLayoutDescription = (TextInputLayout) findViewById(R.id.event_creator_layout_description);
-        eventCreatorLayoutDOB = (TextInputLayout) findViewById(R.id.event_creator_layout_date);
 
         eventCreatorName = (EditText) findViewById(R.id.event_creator_name);
         eventCreatorCity = (EditText) findViewById(R.id.event_creator_city);
         eventCreatorDescription = (EditText) findViewById(R.id.event_creator_description);
         btnSignUp = (Button) findViewById(R.id.btn_create);
 
-        animShake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        validator = new Validator(this);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,90 +84,18 @@ public class EventCreator extends AppCompatActivity {
 
     private void submitForm() {
 
-        if (!checkToEmpty(eventCreatorName, eventCreatorLayoutName)) {
+        if (!validator.checkToEmpty(eventCreatorName, eventCreatorLayoutName, R.string.err_msg_name, R.string.err_msg_required)) {
             return;
         }
-        if (!checkToEmpty(eventCreatorCity, eventCreatorLayoutCity)) {
+        if (!validator.checkToEmpty(eventCreatorName, eventCreatorLayoutName, R.string.err_msg_city, R.string.err_msg_required)) {
             return;
         }
-        if (!checkToEmpty(eventCreatorDescription, eventCreatorLayoutDescription)) {
+        if (!validator.checkToEmpty(eventCreatorName, eventCreatorLayoutName, R.string.err_msg_description, R.string.err_msg_required)) {
             return;
         }
 
-        eventCreatorLayoutName.setErrorEnabled(false);
-        eventCreatorLayoutCity.setErrorEnabled(false);
-        eventCreatorLayoutDescription.setErrorEnabled(false);
-        eventCreatorLayoutDOB.setErrorEnabled(false);
         Toast.makeText(getApplicationContext(), "Event created!!", Toast.LENGTH_SHORT).show();
     }
-
-    private boolean checkToEmpty(EditText et, TextInputLayout til) {
-        if (et.getText().toString().trim().isEmpty()) {
-            til.setErrorEnabled(true);
-            til.setError(getString(R.string.err_msg_name));
-            et.setError(getString(R.string.err_msg_required));
-            et.setAnimation(animShake);
-            et.startAnimation(animShake);
-            requestFocus(et);
-            vib.vibrate(120);
-            return false;
-        }
-        til.setErrorEnabled(false);
-        return true;
-    }
-
-    private boolean checkEmail() {
-        String email = eventCreatorCity.getText().toString().trim();
-        if (email.isEmpty() || !isValidEmail(email)) {
-
-            eventCreatorLayoutCity.setErrorEnabled(true);
-            eventCreatorLayoutCity.setError(getString(R.string.err_msg_city));
-            eventCreatorCity.setError(getString(R.string.err_msg_required));
-            requestFocus(eventCreatorCity);
-            return false;
-        }
-        eventCreatorLayoutCity.setErrorEnabled(false);
-        return true;
-    }
-
-    private boolean checkPassword() {
-        if (eventCreatorDescription.getText().toString().trim().isEmpty()) {
-
-            eventCreatorLayoutDescription.setError(getString(R.string.err_msg_password));
-            requestFocus(eventCreatorDescription);
-            return false;
-        }
-        eventCreatorLayoutDescription.setErrorEnabled(false);
-        return true;
-    }
-
-    private boolean checkDOB() {
-        boolean isFuture = dateTime.before(Calendar.getInstance());
-
-        if (isFuture) {
-
-            eventCreatorLayoutDOB.setError(getString(R.string.err_msg_dob));
-            requestFocus(text);
-            text.setError(getString(R.string.err_msg_required));
-
-            return false;
-        }
-
-
-        text.setError(null);
-        return true;
-    }
-
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private void requestFocus(View view) {
-        if (view.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
 
     private void updateDate() {
         DatePickerDialog dialog = new DatePickerDialog(this, d, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH));
@@ -205,9 +130,4 @@ public class EventCreator extends AppCompatActivity {
         text.setText(formatDateTime.format(dateTime.getTime()));
     }
 
-    public void showDialog(View v){
-        Dialog dialog = new Dialog(this);
-//        dialog.setContentView(R.layout.datetime_dialog);
-        dialog.show();
-    }
 }

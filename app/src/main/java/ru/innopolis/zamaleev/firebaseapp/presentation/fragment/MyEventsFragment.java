@@ -1,14 +1,20 @@
 package ru.innopolis.zamaleev.firebaseapp.presentation.fragment;
 
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -71,7 +77,9 @@ public class MyEventsFragment extends Fragment {
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recycler.setItemAnimator(itemAnimator);
 
-        FirebaseUser user = mAuth.getInstance().getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
 
         myRef = FirebaseDatabase.getInstance().getReference().child(user.getUid()).child("Events");
 
@@ -86,10 +94,32 @@ public class MyEventsFragment extends Fragment {
             }
         });
 
+//        Toolbar myToolbar = (Toolbar) getView().findViewById(R.id.my_event_toolbar);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(myToolbar);
+
+        Toolbar toolbar = (Toolbar)getView().findViewById(R.id.my_event_toolbar);
+        toolbar.inflateMenu(R.menu.toolbar_menu);
+        toolbar.setOnMenuItemClickListener(item ->  {
+
+            if (item.getItemId() == R.id.action_sign_out){
+                if (user != null) {
+                    mAuth.signOut();
+                } else {
+                    // TODO
+                }
+            }
+
+            return true;
+        });
+
         updateListener();
 
         checkIfDataEmpty();
     }
+
+
+
+
 
     private void updateListener() {
         myRef.addChildEventListener(new ChildEventListener() {

@@ -56,8 +56,9 @@ public class MapFragment extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
+                //TODO location permission request
+
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    //User has previously accepted this permissio
 
                     if (ActivityCompat.checkSelfPermission(getContext(),
                             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -85,18 +86,6 @@ public class MapFragment extends Fragment {
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
-//
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-//        mFusedLocationClient.getLastLocation();
-//                .addOnSuccessListener((Activity) getContext(), new OnSuccessListener<Location>() {
-//                    @Override
-//                    public void onSuccess(Location location) {
-//                        // Got last known location. In some rare situations this can be null.
-//                        if (location != null) {
-//                            // ...
-//                        }
-//                    }
-//                });
         return rootView;
     }
 
@@ -127,6 +116,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        //TODO needs better impl
         if (requestCode == REQUEST_LOCATION && grantResults.length > 0) {
             if (ActivityCompat.checkSelfPermission(getContext(),
                     android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(getContext(),

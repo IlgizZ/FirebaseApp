@@ -49,11 +49,15 @@
                 android:background="@drawable/scrim_bottom" />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/main.toolbar"
+                android:elevation="4dp"
+                android:id="@+id/my_event_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:title="My events" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:title="My events"
+                app:menu="@menu/toolbar_menu"/>
+
 
 
         </android.support.design.widget.CollapsingToolbarLayout>

@@ -1,12 +1,10 @@
 package ru.innopolis.zamaleev.firebaseapp.presentation.view;
 
 import android.content.Intent;
-import android.os.Build;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,8 +20,8 @@ public class SingInActivity extends AppCompatActivity {
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private EditText ETemail;
-    private EditText ETpassword;
+    private EditText email, password;
+    private TextInputLayout emailLayout, passwordLayout;
 
     private SignInInteractor signInInteractor;
 
@@ -58,48 +56,18 @@ public class SingInActivity extends AppCompatActivity {
 
         };
 
-        signInInteractor = new SignInInteractor(mAuthListener);
+        signInInteractor = new SignInInteractor(mAuthListener, this);
 
-        ETemail = (EditText) findViewById(R.id.et_email);
-        ETpassword = (EditText) findViewById(R.id.et_password);
+        email = (EditText) findViewById(R.id.et_email);
+        password = (EditText) findViewById(R.id.et_password);
+        emailLayout = (TextInputLayout) findViewById(R.id.sign_in_layout_email);
+        passwordLayout = (TextInputLayout) findViewById(R.id.sign_in_layout_password);
 
-        findViewById(R.id.btn_sign_in).setOnClickListener(v -> {
-            signInInteractor.signIn(ETemail.getText().toString(), ETpassword.getText().toString(), task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(SingInActivity.this, "Aвторизация успешна", Toast.LENGTH_SHORT).show();
-                    //TODO
-                } else
-                    Toast.makeText(SingInActivity.this, "Aвторизация провалена", Toast.LENGTH_SHORT).show();
-                    //TODO
-            });
-        });
-//        findViewById(R.id.btn_sign_up).setOnClickListener(v -> {
-//            signUp(ETemail.getText().toString(), ETpassword.getText().toString());
-//        });
+        findViewById(R.id.btn_sign_in).setOnClickListener(v -> submit());
     }
 
+    private void submit(){
+        signInInteractor.signIn(email, password, emailLayout, passwordLayout);
+    }
 
-//    public void signIn(String email, String password) {
-//        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-//
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(SingInActivity.this, "Aвторизация успешна", Toast.LENGTH_SHORT).show();
-//                } else
-//                    Toast.makeText(SingInActivity.this, "Aвторизация провалена", Toast.LENGTH_SHORT).show();
-//
-//
-//        });
-//    }
-
-//    public void signUp(String email, String password) {
-//        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(SingInActivity.this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
-//                } else
-//                    Toast.makeText(SingInActivity.this, "Регистрация провалена", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 }

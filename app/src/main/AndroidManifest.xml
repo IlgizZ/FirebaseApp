@@ -29,7 +29,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.view.EventActivity" />
         <activity
             android:name=".presentation.view.EventCreator"
             android:screenOrientation="portrait" />

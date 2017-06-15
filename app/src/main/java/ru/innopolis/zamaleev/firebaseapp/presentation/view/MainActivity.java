@@ -1,11 +1,17 @@
 package ru.innopolis.zamaleev.firebaseapp.presentation.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import ru.innopolis.zamaleev.firebaseapp.R;
 import ru.innopolis.zamaleev.firebaseapp.presentation.fragment.MapFragment;
@@ -42,6 +48,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         myEventsFragment = new MyEventsFragment();
         mapFragment = new MapFragment();
+
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                // User is signed in
+                Toast.makeText(MainActivity.this, "user already have signed in", Toast.LENGTH_SHORT).show();
+//                Log.d(ON_AUTH, "onAuthStateChanged:signed_in:" + user.getUid());
+
+
+            } else {
+                // User is signed out
+                Toast.makeText(MainActivity.this, "user signed out", Toast.LENGTH_SHORT).show();
+//                Log.d(ON_AUTH, "onAuthStateChanged:signed_out");
+                Intent intent = new Intent(MainActivity.this, SingInActivity.class);
+                startActivity(intent);
+            }
+        });
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
