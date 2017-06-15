@@ -2,6 +2,7 @@
     <string name="app_name">FirebaseApp</string>
     <string name="hint_date">Date (DD-MM-YYYY)</string>
     <string name="hint_description">Description</string>
+    <string name="hint_password">Password</string>
     <string name="hint_tag">Tag</string>
     <string name="tag_entertainment">Entertainment</string>
     <string name="tag_tourism">Tourism</string>
@@ -12,4 +13,11 @@
     <string name="err_msg_password">Enter a Password</string>
     <string name="err_msg_dob">Enter a valid D.O.B</string>
     <string name="no_data">Events doesn\'t found</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_profile">My profile</string>
+    <string name="title_search">Search</string>
+    <string name="title_notification">Notifications</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_new_event">Create</string>
+    <string name="hint_email_username">Email or Username</string>
 </resources>

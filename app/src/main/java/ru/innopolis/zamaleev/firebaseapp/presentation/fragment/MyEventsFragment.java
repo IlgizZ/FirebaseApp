@@ -1,13 +1,16 @@
-package ru.innopolis.zamaleev.firebaseapp;
+package ru.innopolis.zamaleev.firebaseapp.presentation.fragment;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,13 +25,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ru.innopolis.zamaleev.firebaseapp.adapter.RecyclerAdapter;
-import ru.innopolis.zamaleev.firebaseapp.model.Event;
+import ru.innopolis.zamaleev.firebaseapp.presentation.view.EventCreator;
+import ru.innopolis.zamaleev.firebaseapp.R;
+import ru.innopolis.zamaleev.firebaseapp.presentation.adapter.RecyclerAdapter;
+import ru.innopolis.zamaleev.firebaseapp.data.entity.Event;
 
-public class EventActivity extends AppCompatActivity {
+/**
+ * Created by Ilgiz on 6/8/2017.
+ */
 
+public class MyEventsFragment extends Fragment {
     private DatabaseReference myRef;
-
     private List<Event> events;
     private RecyclerView recycler;
     private RecyclerAdapter adapter;
@@ -36,14 +43,19 @@ public class EventActivity extends AppCompatActivity {
     private TextView tVNoData;
     private FloatingActionButton fab;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_event, container, false);
+    }
 
-        recycler = (RecyclerView) findViewById(R.id.event_recycler);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recycler = (RecyclerView) getView().findViewById(R.id.event_recycler);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         events = new ArrayList();
@@ -63,9 +75,9 @@ public class EventActivity extends AppCompatActivity {
 
         myRef = FirebaseDatabase.getInstance().getReference().child(user.getUid()).child("Events");
 
-        tVNoData = (TextView) findViewById(R.id.text_no_data);
+        tVNoData = (TextView) getView().findViewById(R.id.text_no_data);
 
-        fab = (FloatingActionButton) findViewById(R.id.event_activity_fab);
+        fab = (FloatingActionButton) getView().findViewById(R.id.event_activity_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,4 +1,4 @@
-package ru.innopolis.zamaleev.firebaseapp;
+package ru.innopolis.zamaleev.firebaseapp.presentation.view;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -23,6 +23,8 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import ru.innopolis.zamaleev.firebaseapp.R;
 
 public class EventCreator extends AppCompatActivity {
 

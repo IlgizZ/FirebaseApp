@@ -10,12 +10,32 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowTranslucentStatus">true</item>
-
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
+    <style name="AuthStyle" parent="Theme.AppCompat.Light">
+
+        <item name="colorAccent">@color/white</item>
+
+        <!--Edittext-->
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <!--Edittext-->
+        <item name="android:textColorSecondary">@color/white</item>
+
+        <!--TextView-->
+        <item name="android:textColorTertiary">@color/white</item>
+
+        <item name="android:textColorHint">@color/white</item>
+
+    </style>
     <style name="MyButton" parent="Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/colorCyan</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="counterText">"@colors/"</style>
+
+    <style name="counterOverride"></style>
 
 </resources>

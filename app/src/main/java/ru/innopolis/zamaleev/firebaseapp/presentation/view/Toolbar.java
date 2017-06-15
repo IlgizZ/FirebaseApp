@@ -1,4 +1,4 @@
-package ru.innopolis.zamaleev.firebaseapp;
+package ru.innopolis.zamaleev.firebaseapp.presentation.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
