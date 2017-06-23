@@ -43,6 +43,8 @@ import io.reactivex.observers.DisposableObserver;
 import ru.innopolis.zamaleev.firebaseapp.R;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.EventMap;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.Filter;
+import ru.innopolis.zamaleev.firebaseapp.data.entity.Requirement;
+import ru.innopolis.zamaleev.firebaseapp.data.entity.User;
 import ru.innopolis.zamaleev.firebaseapp.interactor.MapInteractor;
 
 //import com.google.android.gms.location.FusedLocationProviderClient;
@@ -89,9 +91,23 @@ public class MapFragment extends Fragment {
 
             EventMap event = (EventMap) marker.getTag();
 
+
+
+            List<User> users = new ArrayList<>( event.getParticipants().values());
+            List<Requirement> requirements = new ArrayList<>(event.getRequirements().values());
+
+            String participants = users.size() + "/" + event.getRequired_people_count();
+            StringBuilder requirementsText = new StringBuilder();
+
+            requirements.forEach(requirement -> {
+                requirementsText.append(requirement.getDescription() + "\n");
+            });
+
             ((TextView)view.findViewById(R.id.title)).setText(event.getTitle());
             ((TextView)view.findViewById(R.id.marker_date)).setText(event.getDate_begin());
             ((TextView)view.findViewById(R.id.marker_time)).setText(event.getTime_begin());
+            ((TextView)view.findViewById(R.id.marker_price)).setText(requirementsText.toString());
+            ((TextView)view.findViewById(R.id.participants)).setText(participants);
             ((TextView)view.findViewById(R.id.snippet)).setText(event.getDescription());
         }
     }
