@@ -16,19 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".presentation.view.SingInActivity"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.view.EventCreator"
             android:screenOrientation="portrait" />
@@ -47,10 +45,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".presentation.view.MapActivity"
-            android:label="@string/title_activity_map" />
-        <activity android:name=".presentation.view.SignUpActivity"></activity>
+        <activity android:name=".presentation.view.SignUpActivity" />
+        <activity android:name=".presentation.view.LocationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

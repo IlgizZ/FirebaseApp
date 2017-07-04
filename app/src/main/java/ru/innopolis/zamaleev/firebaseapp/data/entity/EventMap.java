@@ -2,6 +2,8 @@ package ru.innopolis.zamaleev.firebaseapp.data.entity;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,7 @@ import java.util.Map;
  * Created by Ilgiz on 6/16/2017.
  */
 @IgnoreExtraProperties
-public class EventMap {
+public class EventMap implements Serializable{
     private Map<String,User> creator;
     private String description;
     private String date_begin;
@@ -17,6 +19,7 @@ public class EventMap {
     private String time_begin;
     private String time_end;
     private String title;
+    private String tag;
     private Location location;
     private Map<String, User> participants;
     private Map<String, Requirement> requirements;
@@ -25,7 +28,23 @@ public class EventMap {
     public EventMap() {
     }
 
-    public EventMap(Map<String, User> creator, String description, String date_begin, String date_end, String time_begin, String time_end, String title, Location location, Map<String, User> participants, Map<String, Requirement> requirements, Integer required_people_count) {
+    public EventMap(Map<String, User> creator) {
+        this.creator = creator;
+        this.participants = creator;
+        this.requirements = new HashMap();
+        this.description = "";
+        this.date_begin = "";
+        this.date_end = "";
+        this.time_begin = "";
+        this.time_end = "";
+        this.tag = "";
+        this.title = "";
+        this.location = new Location();
+        this.required_people_count = 0;
+    }
+
+
+    public EventMap(Map<String, User> creator, String description, String date_begin, String date_end, String time_begin, String time_end, String title, String tag, Location location, Map<String, User> participants, Map<String, Requirement> requirements, Integer required_people_count) {
         this.creator = creator;
         this.description = description;
         this.date_begin = date_begin;
@@ -33,10 +52,19 @@ public class EventMap {
         this.time_begin = time_begin;
         this.time_end = time_end;
         this.title = title;
+        this.tag = tag;
         this.location = location;
         this.participants = participants;
         this.requirements = requirements;
         this.required_people_count = required_people_count;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getDate_begin() {

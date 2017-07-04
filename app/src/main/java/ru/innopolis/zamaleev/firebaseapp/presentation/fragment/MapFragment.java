@@ -2,19 +2,16 @@ package ru.innopolis.zamaleev.firebaseapp.presentation.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,16 +25,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.observers.DisposableObserver;
 import ru.innopolis.zamaleev.firebaseapp.R;
@@ -56,11 +52,15 @@ import ru.innopolis.zamaleev.firebaseapp.interactor.MapInteractor;
 public class MapFragment extends Fragment {
 
     private static final int REQUEST_LOCATION = 777;
+    private final int PARTICIPANT_COUNT = 3;
     MapView mMapView;
+    private List<byte[]> markerImages;
     private GoogleMap googleMap;
     private MapInteractor interactor;
     private Observer<Map<String, EventMap>> eventsSubscriber;
     private List<Marker> markers;
+    private StorageReference mStorageRef;
+    private static final String TAG = "MapFragment";
 
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -87,28 +87,39 @@ public class MapFragment extends Fragment {
 
         private void render(Marker marker, View view) {
 
-
+            ImageView[] participants = new ImageView[PARTICIPANT_COUNT];
+            participants[0] = ((ImageView) view.findViewById(R.id.marker_participant1));
+            participants[1] = ((ImageView) view.findViewById(R.id.marker_participant2));
+            participants[2] = ((ImageView) view.findViewById(R.id.marker_participant3));
 
             EventMap event = (EventMap) marker.getTag();
 
 
+            List<User> users = new ArrayList<>(event.getParticipants().values());
 
-            List<User> users = new ArrayList<>( event.getParticipants().values());
-            List<Requirement> requirements = new ArrayList<>(event.getRequirements().values());
+            int userCount = users.size() >= 3 ? 3 : users.size();
 
-            String participants = users.size() + "/" + event.getRequired_people_count();
+            for (int i = 0; i < userCount; i++) {
+                byte[] bytes = markerImages.get(i);
+                participants[i].setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            }
+
+
+            List<Requirement> requirements = event.getRequirements() != null ? new ArrayList<>(event.getRequirements().values()): new ArrayList<>();
+
+            String currentParticipantsCount = users.size() + "/" + event.getRequired_people_count();
             StringBuilder requirementsText = new StringBuilder();
 
             requirements.forEach(requirement -> {
                 requirementsText.append(requirement.getDescription() + "\n");
             });
 
-            ((TextView)view.findViewById(R.id.title)).setText(event.getTitle());
-            ((TextView)view.findViewById(R.id.marker_date)).setText(event.getDate_begin());
-            ((TextView)view.findViewById(R.id.marker_time)).setText(event.getTime_begin());
-            ((TextView)view.findViewById(R.id.marker_price)).setText(requirementsText.toString());
-            ((TextView)view.findViewById(R.id.participants)).setText(participants);
-            ((TextView)view.findViewById(R.id.snippet)).setText(event.getDescription());
+            ((TextView) view.findViewById(R.id.title)).setText(event.getTitle());
+            ((TextView) view.findViewById(R.id.marker_date)).setText(event.getDate_begin());
+            ((TextView) view.findViewById(R.id.marker_time)).setText(event.getTime_begin());
+            ((TextView) view.findViewById(R.id.marker_price)).setText(requirementsText.toString());
+            ((TextView) view.findViewById(R.id.participants)).setText(currentParticipantsCount);
+            ((TextView) view.findViewById(R.id.snippet)).setText(event.getDescription());
         }
     }
 
@@ -117,7 +128,7 @@ public class MapFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_map, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         mMapView.onResume(); // needed to get the map to display immediately
 
         try {
@@ -172,16 +183,55 @@ public class MapFragment extends Fragment {
                 }
 
                 // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(55.7525657, 48.7423347);
-                markers = new ArrayList<Marker>();
+                LatLng innopolis = new LatLng(55.7525657, 48.7423347);
+                markers = new ArrayList();
+                markerImages = new ArrayList();
+
                 interactor.getEventsByFilter(new Filter(), eventsSubscriber);
                 // For zooming automatically to the location of the marker
                 googleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15).build();
+                googleMap.setOnMarkerClickListener(marker -> {
+                    EventMap event = (EventMap) marker.getTag();
+                    markerImages.clear();
+
+
+                    List<User> users = new ArrayList<>(event.getParticipants().values());
+
+                    int userCount = users.size() >= PARTICIPANT_COUNT ? PARTICIPANT_COUNT : users.size();
+
+                    for (int i = 0; i < userCount; i++) {
+                        User user = users.get(i);
+                        String path = "user_images/" + user.getImg();
+                        if (path != null) {
+                            final long ONE_MEGABYTE = 1024 * 1024 * 2;
+                            StorageReference spaceRef =  mStorageRef.child(path);
+                            spaceRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                markerImages.add(bytes);
+                                if (isImagesDownload(userCount))
+                                    marker.showInfoWindow();
+                            }).addOnFailureListener(e -> {
+
+                                //TODO
+                                Log.e(TAG, e.getMessage());
+                            })
+                            ;
+
+                        } else {
+                            //TODO
+                        }
+
+                    }
+                    return true;
+                });
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(innopolis).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
         return rootView;
+    }
+
+    private boolean isImagesDownload(int userCount) {
+        return markerImages.size() == userCount;
     }
 
     @Override
@@ -216,18 +266,17 @@ public class MapFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(getContext(),
                     android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION))
-            googleMap.setMyLocationEnabled(true);
+                googleMap.setMyLocationEnabled(true);
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void updateMarkers(Map<String, EventMap> eventMaps){
+    private void updateMarkers(Map<String, EventMap> eventMaps) {
         markers.forEach(Marker::remove);
         markers.clear();
         eventMaps.forEach((key, eventMap) -> {
             LatLng sydney = new LatLng(eventMap.getLocation().getLn(), eventMap.getLocation().getLg());
             Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney).title(eventMap.getTitle()).snippet(eventMap.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-
             marker.setTag(eventMap);
             markers.add(marker);
         });

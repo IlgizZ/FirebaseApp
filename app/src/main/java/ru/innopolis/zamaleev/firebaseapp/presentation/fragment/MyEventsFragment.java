@@ -1,5 +1,7 @@
 package ru.innopolis.zamaleev.firebaseapp.presentation.fragment;
 
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -17,8 +19,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -26,7 +33,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +60,9 @@ public class MyEventsFragment extends Fragment {
     private RecyclerAdapter adapter;
     private FirebaseAuth mAuth;
     private TextView tVNoData;
+    private ImageView profileImg;
     private FloatingActionButton fab;
+    private StorageReference mStorageRef;
 
     @Nullable
     @Override
@@ -94,8 +109,14 @@ public class MyEventsFragment extends Fragment {
             }
         });
 
-//        Toolbar myToolbar = (Toolbar) getView().findViewById(R.id.my_event_toolbar);
-//        ((AppCompatActivity)getActivity()).setSupportActionBar(myToolbar);
+        profileImg = (ImageView)getView().findViewById(R.id.main_backdrop);
+        mStorageRef = FirebaseStorage.getInstance().getReference().child("user_images/img1.png");
+
+        Glide.with(getContext())
+                .using(new FirebaseImageLoader())
+                .load(mStorageRef)
+                .into(profileImg);
+
 
         Toolbar toolbar = (Toolbar)getView().findViewById(R.id.my_event_toolbar);
         toolbar.inflateMenu(R.menu.toolbar_menu);

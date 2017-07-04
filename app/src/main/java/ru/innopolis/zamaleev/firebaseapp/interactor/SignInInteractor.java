@@ -97,13 +97,13 @@ public class SignInInteractor {
     public void signUp(String email, String password, OnCompleteListener<AuthResult> listener) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(listener);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        writeNewUser(email, password, user.getUid());
+        writeNewUser(email, password, user.getUid(), null);
     }
 
 
 
-    private void writeNewUser(String userId, String name, String email) {
-        User user = new User(name, email);
+    private void writeNewUser(String userId, String name, String email, String img) {
+        User user = new User(name, email, img);
         myRef.child("users").child(userId).setValue(user);
     }
 }

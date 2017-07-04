@@ -59,29 +59,40 @@
             android:layout_width="match_parent"
             android:layout_height="44dp">
 
-            <ImageView
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/marker_participant1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/trip" />
+                android:src="@drawable/trip"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"/>
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/marker_participant2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/trip" />
+                android:src="@drawable/trip"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"/>
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/marker_participant3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/trip"></ImageView>
+                android:src="@drawable/trip"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"/>
+
         </LinearLayout>
 
         <RelativeLayout

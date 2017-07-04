@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Fragment myEventsFragment;
     private MapFragment mapFragment;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth mAuth;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_notification:
                     return true;
+                case R.id.navigation_new_event:
+                    return true;
             }
             return false;
         }
@@ -43,28 +47,43 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myEventsFragment = new MyEventsFragment();
         mapFragment = new MapFragment();
-
-        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = firebaseAuth ->  {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 // User is signed in
                 Toast.makeText(MainActivity.this, "user already have signed in", Toast.LENGTH_SHORT).show();
-//                Log.d(ON_AUTH, "onAuthStateChanged:signed_in:" + user.getUid());
+//                Log.beginDatePicker(ON_AUTH, "onAuthStateChanged:signed_in:" + user.getUid());
 
 
             } else {
                 // User is signed out
                 Toast.makeText(MainActivity.this, "user signed out", Toast.LENGTH_SHORT).show();
-//                Log.d(ON_AUTH, "onAuthStateChanged:signed_out");
+//                Log.beginDatePicker(ON_AUTH, "onAuthStateChanged:signed_out");
                 Intent intent = new Intent(MainActivity.this, SingInActivity.class);
                 startActivity(intent);
+                finish();
             }
-        });
+        };
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
