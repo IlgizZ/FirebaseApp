@@ -1,0 +1,93 @@
+{
+  "events": {
+    "sdfsd12": {
+      "creator": {
+        "12312312asdf": {
+          "email": "ilgiz1996@mail.ru",
+          "img": "img1.png",
+          "username": "IAZamaleev"
+        }
+      },
+      "description": "Some event",
+      "date_begin": "12-10-2017",
+      "date_end": "1231234123dasf",
+      "time_begin": "1231234123dasf",
+      "time_end": "1231234123dasf",
+      "title": "1231234123dasf",
+      "tag": "1231234123dasf",
+      "location": {
+        "city": "Kazan",
+        "street": "some address",
+        "flat": 1,
+        "home": 1,
+        "ln": 55.7525657,
+        "lg": 48.7423347
+      },
+      "participants": {
+        "12312312asdf": {
+          "email": "ilgiz1996@mail.ru",
+          "img": "img1.png",
+          "username": "IAZamaleev"
+        },
+        "serts4534": {
+          "email": "qweld@mail.ru",
+          "img": "img2.png",
+          "username": "qweld"
+        }
+      },
+      "requirements": {
+        "1231sdf": {
+          "description": "ilgiz1996@mail.ru"
+        },
+        "sed214": {
+          "description": "ilgiz1996@mail.ru"
+        }
+      },
+      "required_people_count": 10
+    }
+  },
+  "urwfmmZpkpcA02uo8bu5p1A47vG3": {
+    "Events": [
+      {
+        "city": "Kazan",
+        "date": "25-06-2017",
+        "description": "We want to visit the best swimming pool in Kazan. We need 4 more people for that",
+        "name": "Swimming Kazan",
+        "tag": "entertainment"
+      },
+      {
+        "city": "Innopolis",
+        "date": "29-06-2017",
+        "description": "We want to visit the best swimming pool in Innopolis. We need 3 more people for that",
+        "name": "Swimming Innopolis",
+        "tag": "entertainment"
+      },
+      {
+        "city": "Kazan",
+        "date": "20-06-2017",
+        "description": "Let's go together to grill meat in the open air near to river. We need 1 person on a car.",
+        "name": "BBQ on Volga river",
+        "tag": "entertainment"
+      },
+      {
+        "city": "Moscow",
+        "date": "26-08-2017",
+        "description": "go to bbq in countryside",
+        "name": "Moscow countryside",
+        "tag": "party"
+      }
+    ]
+  },
+  "users": {
+    "12312312asdf": {
+      "email": "ilgiz1996@mail.ru",
+      "img": "img1.png",
+      "username": "IAZamaleev"
+    },
+    "serts4534": {
+      "email": "qweld@mail.ru",
+      "img": "img2.png",
+      "username": "qweld"
+    }
+  }
+}

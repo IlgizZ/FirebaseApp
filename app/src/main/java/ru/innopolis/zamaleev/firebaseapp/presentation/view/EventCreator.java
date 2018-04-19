@@ -11,13 +11,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,15 +36,14 @@ import java.util.HashMap;
 
 import ru.innopolis.zamaleev.firebaseapp.R;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.EventMap;
-import ru.innopolis.zamaleev.firebaseapp.data.entity.Location;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.User;
-import ru.innopolis.zamaleev.firebaseapp.util.Extras;
+import ru.innopolis.zamaleev.firebaseapp.enums.Extras;
 import ru.innopolis.zamaleev.firebaseapp.util.Validator;
 
 public class EventCreator extends AppCompatActivity {
 
-    private EditText name, description, location, peopleCount;
-    private TextInputLayout eventCreatorLayoutName, eventCreatorLayoutDescription, eventCreatorLayoutLocation, peopleCountLayout;
+    private EditText name, description, location, peopleCount, cost;
+    private TextInputLayout eventCreatorLayoutName, eventCreatorLayoutDescription, eventCreatorLayoutLocation, peopleCountLayout, costLayout;
     private Button btnSignUp, btnLocation;
     private DateFormat formatDateTime, dateFormat, timeFormat;
     private Calendar beginDate, endDate, currentDate;
@@ -70,17 +70,16 @@ public class EventCreator extends AppCompatActivity {
 
 
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
-        myRef = FirebaseDatabase.getInstance().getReference("users");
-        myRef.orderByChild("email").equalTo(fbUser.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef = FirebaseDatabase.getInstance().getReference("users").child(fbUser.getUid());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot.getChildren().forEach(snapshot -> {
-                    User user = snapshot.getValue(User.class);
-                    HashMap<String, User> userMap = new HashMap();
-                    userMap.put(snapshot.getKey(), user);
-                    newEvent = new EventMap(userMap);
-                    btnLocation.setClickable(true);
-                });
+                User user = dataSnapshot.getValue(User.class);
+                HashMap<String, User> userMap = new HashMap();
+                userMap.put(dataSnapshot.getKey(), user);
+                newEvent = new EventMap(userMap);
+                btnLocation.setClickable(true);
+
             }
 
             @Override
@@ -112,11 +111,13 @@ public class EventCreator extends AppCompatActivity {
         eventCreatorLayoutLocation = (TextInputLayout) findViewById(R.id.event_creator_layout_location);
         eventCreatorLayoutDescription = (TextInputLayout) findViewById(R.id.event_creator_layout_description);
         peopleCountLayout = (TextInputLayout) findViewById(R.id.event_creator_layout_people_count);
+        costLayout = (TextInputLayout) findViewById(R.id.event_creator_layout_cost);
         tags = (RadioGroup) findViewById(R.id.tags);
 
         name = (EditText) findViewById(R.id.event_creator_name);
         description = (EditText) findViewById(R.id.event_creator_description);
         peopleCount = (EditText) findViewById(R.id.people_count);
+        cost = (EditText) findViewById(R.id.cost);
         btnSignUp = (Button) findViewById(R.id.btn_create);
 
         validator = new Validator(this);
@@ -136,10 +137,10 @@ public class EventCreator extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         LatLng position = data.getParcelableExtra(Extras.LOCATION.toString());
-        Location location = null;
+
         try {
-            location = new Location(position, this);
-            newEvent.setLocation(location);
+
+            newEvent.addLocation(position, this);
         } catch (IOException e) {
             //TODO
             e.printStackTrace();
@@ -151,7 +152,7 @@ public class EventCreator extends AppCompatActivity {
 
     private void initFields() {
 //        name.setText(newEvent.getTitle());
-        location.setText(newEvent.getLocation().getStreet());
+        location.setText(newEvent.getAddress());
 //        description.setText(newEvent.getDescription());
 //        beginDateTV.setText(newEvent.getDate_begin());
 //        beginTimeTV.setText(newEvent.getTime_begin());
@@ -180,22 +181,36 @@ public class EventCreator extends AppCompatActivity {
         if (!validator.checkToEmpty(peopleCount, peopleCountLayout, R.string.err_msg_people_count, R.string.err_msg_required)) {
             return;
         }
+        if (!validator.checkToEmpty(cost, costLayout, R.string.err_msg_cost, R.string.err_msg_required)) {
+            return;
+        }
 
         newEvent.setDate_begin(beginDateTV.getText().toString());
         newEvent.setTime_begin(beginTimeTV.getText().toString());
         newEvent.setDate_end(endDateTV.getText().toString());
         newEvent.setTime_end(endTimeTV.getText().toString());
         newEvent.setDescription(description.getText().toString());
-        newEvent.setTitle(name.getText().toString());
-        newEvent.setRequired_people_count(Integer.valueOf(peopleCount.getText().toString()));
+        newEvent.setName(name.getText().toString());
+        newEvent.setCost(Double.valueOf(cost.getText().toString()));
+        newEvent.setPeople_count(Integer.valueOf(peopleCount.getText().toString()));
 
         RadioButton btn = (RadioButton) findViewById(tags.getCheckedRadioButtonId());
 
-        newEvent.setTag(btn.getText().toString());
+        newEvent.setType(btn.getText().toString());
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference newRef = mDatabase.child("events").push();
+        String key = newRef.getKey();
+        newEvent.setEvent_id(key);
         newRef.setValue(newEvent);
-        Toast.makeText(getApplicationContext(), "Event created!!", Toast.LENGTH_SHORT).show();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase.child("users").child(user.getUid()).child("events").child(key).setValue(newEvent);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("locations");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(newEvent.getEvent_id(), new GeoLocation(newEvent.getLat(), newEvent.getLng()));
+
+        Toast.makeText(getApplicationContext(), "MyEvent created!!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(EventCreator.this, MainActivity.class);
 
 //            intent.putExtra(Extras.BITMAP.toString(), bitmap);

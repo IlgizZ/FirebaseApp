@@ -11,22 +11,22 @@ import java.util.Date;
  * Created by Ilgiz on 25.05.2017.
  */
 
-public class Event implements Comparable, Serializable {
+public class MyEvent implements Comparable, Serializable {
 
-    private Long id;
+    private String event_id;
     private String city;
-    private String date;
+    private String date_begin;
     private String name;
     private String tag;
     private String description;
 
-    public Event() {
+    public MyEvent() {
     }
 
-    public Event(Long id, String city, String date, String name, String tag, String description) {
-        this.id = id;
+    public MyEvent(String id, String city, String date_begin, String name, String tag, String description) {
+        this.event_id = id;
         this.city = city;
-        this.date = date;
+        this.date_begin = date_begin;
         this.name = name;
         this.tag = tag;
         this.description = description;
@@ -40,16 +40,13 @@ public class Event implements Comparable, Serializable {
         this.description = description;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setCity(String city) {
         this.city = city;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate_begin(String date_begin) {
+        this.date_begin = date_begin;
     }
 
     public void setName(String name) {
@@ -60,8 +57,12 @@ public class Event implements Comparable, Serializable {
         this.tag = tag;
     }
 
-    public Long getId() {
-        return id;
+    public String getEvent_id() {
+        return event_id;
+    }
+
+    public void setEvent_id(String event_id) {
+        this.event_id = event_id;
     }
 
     public String getName() {
@@ -72,8 +73,8 @@ public class Event implements Comparable, Serializable {
         return city;
     }
 
-    public String getDate() {
-        return date;
+    public String getDate_begin() {
+        return date_begin;
     }
 
     public String getTag() {
@@ -82,25 +83,25 @@ public class Event implements Comparable, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Event)
-            return id.equals(((Event)obj).getId());
+        if (obj instanceof MyEvent)
+            return event_id.equals(((MyEvent)obj).getEvent_id());
 
         return super.equals(obj);
     }
 
     @Override
     public int compareTo(@NonNull Object o) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM");
         Date dateThis;
         Date dateObj;
         try {
-            dateThis = format.parse(date);
+            dateThis = format.parse(date_begin);
         } catch (ParseException e) {
             e.printStackTrace();
             return -1;
         }
         try {
-            dateObj = format.parse(((Event) o).getDate());
+            dateObj = format.parse(((MyEvent) o).getDate_begin());
         } catch (ParseException e) {
             e.printStackTrace();
             return 1;

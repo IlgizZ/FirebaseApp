@@ -29,7 +29,8 @@
         </activity>
         <activity
             android:name=".presentation.view.EventCreator"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".presentation.view.MainActivity"
             android:label="@string/title_activity_main" />
@@ -46,9 +47,15 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".presentation.view.SignUpActivity" />
-        <activity android:name=".presentation.view.LocationActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"></activity>
+        <activity android:name=".presentation.view.LocationActivity" />
+
+        <service android:name=".services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".presentation.view.EventInfo"></activity>
     </application>
 
 </manifest>

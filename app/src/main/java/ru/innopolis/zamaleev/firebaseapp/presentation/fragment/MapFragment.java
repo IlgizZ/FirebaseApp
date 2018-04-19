@@ -1,17 +1,23 @@
 package ru.innopolis.zamaleev.firebaseapp.presentation.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,23 +31,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observer;
 import io.reactivex.observers.DisposableObserver;
 import ru.innopolis.zamaleev.firebaseapp.R;
+import ru.innopolis.zamaleev.firebaseapp.data.entity.EventDecorator;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.EventMap;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.Filter;
-import ru.innopolis.zamaleev.firebaseapp.data.entity.Requirement;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.User;
 import ru.innopolis.zamaleev.firebaseapp.interactor.MapInteractor;
+import ru.innopolis.zamaleev.firebaseapp.presentation.view.EventInfo;
 
 //import com.google.android.gms.location.FusedLocationProviderClient;
 
@@ -57,10 +61,44 @@ public class MapFragment extends Fragment {
     private List<byte[]> markerImages;
     private GoogleMap googleMap;
     private MapInteractor interactor;
-    private Observer<Map<String, EventMap>> eventsSubscriber;
+    private Observer<EventDecorator> eventsSubscriber;
     private List<Marker> markers;
+    private List<Marker> events;
     private StorageReference mStorageRef;
     private static final String TAG = "MapFragment";
+    private Button btn;
+
+
+    private void createSnackbar(LayoutInflater inflater, ViewGroup container){
+//        String text = "dsfasdf";
+
+
+        Snackbar snackbar = Snackbar.make(container, "", Snackbar.LENGTH_INDEFINITE);
+// Get the Snackbar's layout view
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+// Hide the text
+        TextView textView = (TextView) layout.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setVisibility(View.INVISIBLE);
+
+// Inflate our custom view
+        View snackView = inflater.inflate(R.layout.my_snakbar, null);
+// Configure the view
+
+        TextView textViewTop = (TextView) snackView.findViewById(R.id.text);
+//        textViewTop.setText(text);
+        textViewTop.setTextColor(Color.WHITE);
+
+// Add the view to the Snackbar's layout
+        layout.addView(snackView, 0);
+// Show the Snackbar
+        View view = snackbar.getView();
+        CoordinatorLayout.LayoutParams params =(CoordinatorLayout.LayoutParams)view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+
+        view.setLayoutParams(params);
+        snackbar.show();
+
+    }
 
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -88,7 +126,7 @@ public class MapFragment extends Fragment {
         private void render(Marker marker, View view) {
 
             ImageView[] participants = new ImageView[PARTICIPANT_COUNT];
-            participants[0] = ((ImageView) view.findViewById(R.id.marker_participant1));
+            participants[0] = ((ImageView) view.findViewById(R.id.participant2));
             participants[1] = ((ImageView) view.findViewById(R.id.marker_participant2));
             participants[2] = ((ImageView) view.findViewById(R.id.marker_participant3));
 
@@ -105,16 +143,16 @@ public class MapFragment extends Fragment {
             }
 
 
-            List<Requirement> requirements = event.getRequirements() != null ? new ArrayList<>(event.getRequirements().values()): new ArrayList<>();
+            List<String> requirements = event.getRequirements() != null ? new ArrayList<>(event.getRequirements().values()): new ArrayList<>();
 
-            String currentParticipantsCount = users.size() + "/" + event.getRequired_people_count();
+            String currentParticipantsCount = users.size() + "/" + event.getPeople_count();
             StringBuilder requirementsText = new StringBuilder();
 
             requirements.forEach(requirement -> {
-                requirementsText.append(requirement.getDescription() + "\n");
+                requirementsText.append(requirement + "\n");
             });
 
-            ((TextView) view.findViewById(R.id.title)).setText(event.getTitle());
+            ((TextView) view.findViewById(R.id.title)).setText(event.getName());
             ((TextView) view.findViewById(R.id.marker_date)).setText(event.getDate_begin());
             ((TextView) view.findViewById(R.id.marker_time)).setText(event.getTime_begin());
             ((TextView) view.findViewById(R.id.marker_price)).setText(requirementsText.toString());
@@ -130,6 +168,10 @@ public class MapFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mMapView.onResume(); // needed to get the map to display immediately
+        btn = (Button) rootView.findViewById(R.id.button2);
+        btn.setOnClickListener(v -> {
+            createSnackbar(inflater, (ViewGroup)rootView);
+        });
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -137,10 +179,10 @@ public class MapFragment extends Fragment {
             e.printStackTrace();
         }
 
-        eventsSubscriber = new DisposableObserver<Map<String, EventMap>>() {
+        eventsSubscriber = new DisposableObserver<EventDecorator>() {
             @Override
-            public void onNext(@io.reactivex.annotations.NonNull Map<String, EventMap> eventMaps) {
-                updateMarkers(eventMaps);
+            public void onNext(@io.reactivex.annotations.NonNull EventDecorator event) {
+                updateMarkers(event);
             }
 
             @Override
@@ -185,9 +227,12 @@ public class MapFragment extends Fragment {
                 // For dropping a marker at a point on the Map
                 LatLng innopolis = new LatLng(55.7525657, 48.7423347);
                 markers = new ArrayList();
+                events = new ArrayList();
+
+
                 markerImages = new ArrayList();
 
-                interactor.getEventsByFilter(new Filter(), eventsSubscriber);
+                interactor.getEventsByFilter(new Filter(), eventsSubscriber, innopolis);
                 // For zooming automatically to the location of the marker
                 googleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
                 googleMap.setOnMarkerClickListener(marker -> {
@@ -201,10 +246,10 @@ public class MapFragment extends Fragment {
 
                     for (int i = 0; i < userCount; i++) {
                         User user = users.get(i);
-                        String path = "user_images/" + user.getImg();
+                        String path = user.getImg();
                         if (path != null) {
                             final long ONE_MEGABYTE = 1024 * 1024 * 2;
-                            StorageReference spaceRef =  mStorageRef.child(path);
+                            StorageReference spaceRef =  FirebaseStorage.getInstance().getReferenceFromUrl(path);
                             spaceRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                                 markerImages.add(bytes);
                                 if (isImagesDownload(userCount))
@@ -222,6 +267,12 @@ public class MapFragment extends Fragment {
 
                     }
                     return true;
+                });
+                googleMap.setOnInfoWindowClickListener(marker -> {
+                    EventMap event = (EventMap) marker.getTag();
+                    Intent intent = new Intent(getContext(), EventInfo.class);
+                    intent.putExtra("event", event.getEvent_id());
+                    getContext().startActivity(intent);
                 });
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(innopolis).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -271,15 +322,24 @@ public class MapFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void updateMarkers(Map<String, EventMap> eventMaps) {
-        markers.forEach(Marker::remove);
-        markers.clear();
-        eventMaps.forEach((key, eventMap) -> {
-            LatLng sydney = new LatLng(eventMap.getLocation().getLn(), eventMap.getLocation().getLg());
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney).title(eventMap.getTitle()).snippet(eventMap.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-            marker.setTag(eventMap);
-            markers.add(marker);
-        });
+    private void updateMarkers(EventDecorator event) {
+        switch (event.getLogic()){
+            case ADD:
+                LatLng newLocation = new LatLng( event.getLat(), event.getLng());
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(newLocation).title(event.getName()).snippet(event.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                marker.setTag(event);
+                markers.add(marker);
+                break;
+            case DELETE:
+                EventMap e = event;
+                int index = events.indexOf(e);
+                markers.get(index).remove();
+                markers.remove(index);
+                events.remove(index);
+                break;
+            default:
+
+        }
     }
 
 }

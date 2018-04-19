@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,8 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.innopolis.zamaleev.firebaseapp.R;
 import ru.innopolis.zamaleev.firebaseapp.data.entity.EventMap;
-import ru.innopolis.zamaleev.firebaseapp.data.entity.Location;
-import ru.innopolis.zamaleev.firebaseapp.util.Extras;
+import ru.innopolis.zamaleev.firebaseapp.enums.Extras;
 
 public class LocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 

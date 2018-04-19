@@ -1,43 +1,27 @@
 {
   "project_info": {
-    "project_number": "637954410326",
-    "firebase_url": "https://my-frist-app-283ed.firebaseio.com",
-    "project_id": "my-frist-app-283ed",
-    "storage_bucket": "my-frist-app-283ed.appspot.com"
+    "project_number": "618020674800",
+    "firebase_url": "https://hikester-81bcd.firebaseio.com",
+    "project_id": "hikester-81bcd",
+    "storage_bucket": "hikester-81bcd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:637954410326:android:4c98428d1db95363",
+        "mobilesdk_app_id": "1:618020674800:android:4c98428d1db95363",
         "android_client_info": {
           "package_name": "ru.innopolis.zamaleev.firebaseapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "637954410326-dmshdd3antrnfmavegm4rnbinse12q2q.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ru.innopolis.zamaleev.firebaseapp",
-            "certificate_hash": "00abe683a9ee5c25230c25b6484f25f0172bab52"
-          }
-        },
-        {
-          "client_id": "637954410326-rjgtlc8rrrm8o2a7n0rsaomcvl8in68k.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ru.innopolis.zamaleev.firebaseapp",
-            "certificate_hash": "10743f24b4fec6c580fabf2f4d14bf4408494666"
-          }
-        },
-        {
-          "client_id": "637954410326-k9r1n2tj6p1bkvob4lbi0rbhc522jvsu.apps.googleusercontent.com",
+          "client_id": "618020674800-i52fiv3v3568mjkefdu4idio37orjngt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAX1FQT8teY5xBoDsBdpznVe5LXHfNnR30"
+          "current_key": "AIzaSyBM8k7zOdwp1IuzS_2Zm3ekX6gFF4_qLcI"
         }
       ],
       "services": {
@@ -45,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "637954410326-k9r1n2tj6p1bkvob4lbi0rbhc522jvsu.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

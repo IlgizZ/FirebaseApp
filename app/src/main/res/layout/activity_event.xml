@@ -54,7 +54,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="My events"
+                app:title="My Events"
                 app:menu="@menu/toolbar_menu"/>
 
 

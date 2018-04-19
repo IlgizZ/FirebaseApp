@@ -62,7 +62,7 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/marker_participant1"
+                android:id="@+id/participant2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

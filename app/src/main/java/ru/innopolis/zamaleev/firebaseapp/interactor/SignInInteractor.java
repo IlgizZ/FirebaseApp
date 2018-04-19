@@ -103,7 +103,7 @@ public class SignInInteractor {
 
 
     private void writeNewUser(String userId, String name, String email, String img) {
-        User user = new User(name, email, img);
-        myRef.child("users").child(userId).setValue(user);
+//        User user = new User(name, email, img);
+//        myRef.child("users").child(userId).setValue(user);
     }
 }

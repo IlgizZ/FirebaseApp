@@ -14,19 +14,79 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private String username;
+    private String city;
+    private String country;
     private String email;
+    private String facebook;
+    private String id;
+    private String name;
     private String img;
 
-
+    @Exclude
+    private byte[] image;
 
     public User() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String email, String img) {
+    public User(String username, String city, String country, String email, String facebook, String id, String name, String img) {
         this.username = username;
+        this.city = city;
+        this.country = country;
         this.email = email;
+        this.facebook = facebook;
+        this.id = id;
+        this.name = name;
         this.img = img;
+    }
+
+    @Exclude
+    public byte[] getImage() {
+        return image;
+    }
+
+    @Exclude
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getImg() {
@@ -51,5 +111,21 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id != null ? id.equals(user.id) : user.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

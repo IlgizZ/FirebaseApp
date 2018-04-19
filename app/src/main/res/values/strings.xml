@@ -10,7 +10,11 @@
 
 
     <string name="tag_entertainment">Entertainment</string>
-    <string name="tag_tourism">Tourism</string>
+    <string name="tag_trip">Trip</string>
+    <string name="tag_sport">Sport</string>
+    <string name="tag_rent">Rent</string>
+    <string name="tag_concert">Concert</string>
+    <string name="tag_cafe">Cafe</string>
 
     <string name="btn_create">Create</string>
 
@@ -22,6 +26,7 @@
     <string name="err_msg_password">Enter a Password</string>
     <string name="err_msg_people_count">Enter a people count!</string>
     <string name="err_msg_dob">Enter a valid D.O.B</string>
+    <string name="err_msg_cost">Enter a price of event!</string>
     <string name="err_msg_no_such_email_user">Authorization filed! No such email or username.</string>
 
     <string name="no_data">Events doesn\'t found</string>
@@ -34,5 +39,9 @@
     <string name="title_new_event">Create</string>
     <string name="action_sign_out">Sign out</string>
     <string name="hint_people_count">Required people count</string>
+    <string name="hint_cost">Cost</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Notifications:</string>
 
 </resources>

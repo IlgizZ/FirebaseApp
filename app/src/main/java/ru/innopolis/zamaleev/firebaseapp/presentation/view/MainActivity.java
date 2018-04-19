@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,10 +17,12 @@ import com.google.firebase.auth.FirebaseUser;
 import ru.innopolis.zamaleev.firebaseapp.R;
 import ru.innopolis.zamaleev.firebaseapp.presentation.fragment.MapFragment;
 import ru.innopolis.zamaleev.firebaseapp.presentation.fragment.MyEventsFragment;
+import ru.innopolis.zamaleev.firebaseapp.presentation.fragment.Notification;
 
 public class MainActivity extends AppCompatActivity {
 
     private Fragment myEventsFragment;
+    private Fragment notificationFragment;
     private MapFragment mapFragment;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
@@ -30,15 +33,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+                case R.id.navigation_notification:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, notificationFragment).commit();
+                    return true;
                 case R.id.navigation_profile:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, myEventsFragment).commit();
                     return true;
                 case R.id.navigation_search:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, mapFragment).commit();
                     return true;
-                case R.id.navigation_notification:
-                    return true;
                 case R.id.navigation_new_event:
+                    Intent intent = new Intent(MainActivity.this, EventCreator.class);
+                    startActivity(intent);
                     return true;
             }
             return false;
@@ -64,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         myEventsFragment = new MyEventsFragment();
         mapFragment = new MapFragment();
+        notificationFragment = new Notification();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth ->  {
             FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -88,25 +96,16 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        if (findViewById(R.id.content) != null) {
-
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            // Create a new Fragment to be placed in the activity layout
-
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            mapFragment.setArguments(getIntent().getExtras());
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content, mapFragment).commit();
+        Intent startingIntent = getIntent();
+        String event = startingIntent.getStringExtra("newEvent");
+        if (event != null) {
+            navigation.setSelectedItemId(R.id.navigation_notification);
+        } else {
+            navigation.setSelectedItemId(R.id.navigation_search);
         }
+
+
+
     }
 
     @Override

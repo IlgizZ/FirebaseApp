@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -76,6 +78,24 @@
                 android:text="10"
                 android:inputType="number"
                 android:hint="@string/hint_people_count"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/event_creator_layout_cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="10"
+                android:inputType="number"
+                android:hint="@string/hint_cost"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -165,7 +185,7 @@
         </LinearLayout>
 
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="20dp">
@@ -184,8 +204,13 @@
                 android:id="@+id/tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/tv_tag"
-                android:orientation="horizontal">
+                app:layout_constraintLeft_toRightOf="@+id/tv_tag"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_tag"
+                android:layout_marginTop="0dp"
+                app:layout_constraintHorizontal_bias="0.488">
 
                 <RadioButton
                     android:id="@+id/tag_entertainment"
@@ -195,12 +220,37 @@
                     android:text="@string/tag_entertainment" />
 
                 <RadioButton
-                    android:id="@+id/tag_tourism"
+                    android:id="@+id/tag_sport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tag_tourism" />
+                    android:text="@string/tag_sport" />
+
+                <RadioButton
+                    android:id="@+id/tag_trip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_trip" />
+
+                <RadioButton
+                    android:id="@+id/tag_rent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_rent" />
+
+                <RadioButton
+                    android:id="@+id/tag_concert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_concert" />
+
+                <RadioButton
+                    android:id="@+id/tag_cafe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_cafe" />
+
             </RadioGroup>
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
 
         <Button

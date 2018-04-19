@@ -1,22 +1,15 @@
 package ru.innopolis.zamaleev.firebaseapp.presentation.fragment;
 
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,8 +17,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -33,21 +24,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ru.innopolis.zamaleev.firebaseapp.data.entity.MyEvent;
 import ru.innopolis.zamaleev.firebaseapp.presentation.view.EventCreator;
 import ru.innopolis.zamaleev.firebaseapp.R;
 import ru.innopolis.zamaleev.firebaseapp.presentation.adapter.RecyclerAdapter;
-import ru.innopolis.zamaleev.firebaseapp.data.entity.Event;
 
 /**
  * Created by Ilgiz on 6/8/2017.
@@ -55,7 +43,8 @@ import ru.innopolis.zamaleev.firebaseapp.data.entity.Event;
 
 public class MyEventsFragment extends Fragment {
     private DatabaseReference myRef;
-    private List<Event> events;
+    private DatabaseReference usersRef;
+    private List<MyEvent> myEvents;
     private RecyclerView recycler;
     private RecyclerAdapter adapter;
     private FirebaseAuth mAuth;
@@ -79,9 +68,9 @@ public class MyEventsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        events = new ArrayList();
+        myEvents = new ArrayList();
 
-        adapter = new RecyclerAdapter(events);
+        adapter = new RecyclerAdapter(myEvents);
 
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
@@ -93,10 +82,31 @@ public class MyEventsFragment extends Fragment {
         recycler.setItemAnimator(itemAnimator);
 
         mAuth = FirebaseAuth.getInstance();
+        profileImg = (ImageView)getView().findViewById(R.id.main_backdrop);
 
         FirebaseUser user = mAuth.getCurrentUser();
+        usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).child("img");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String path = dataSnapshot.getValue(String.class
 
-        myRef = FirebaseDatabase.getInstance().getReference().child(user.getUid()).child("Events");
+                );
+                mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(path);
+
+                Glide.with(getContext())
+                        .using(new FirebaseImageLoader())
+                        .load(mStorageRef)
+                        .into(profileImg);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                (databaseError.toException()).printStackTrace();
+            }
+        });
+
+        myRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).child("events");
 
         tVNoData = (TextView) getView().findViewById(R.id.text_no_data);
 
@@ -108,15 +118,6 @@ public class MyEventsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        profileImg = (ImageView)getView().findViewById(R.id.main_backdrop);
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("user_images/img1.png");
-
-        Glide.with(getContext())
-                .using(new FirebaseImageLoader())
-                .load(mStorageRef)
-                .into(profileImg);
-
 
         Toolbar toolbar = (Toolbar)getView().findViewById(R.id.my_event_toolbar);
         toolbar.inflateMenu(R.menu.toolbar_menu);
@@ -140,18 +141,16 @@ public class MyEventsFragment extends Fragment {
 
 
 
-
-
     private void updateListener() {
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Event event = dataSnapshot.getValue(Event.class);
-                event.setId(Long.valueOf(dataSnapshot.getKey()));
+                MyEvent myEvent = dataSnapshot.getValue(MyEvent.class);
+                myEvent.setEvent_id((dataSnapshot.getKey()));
 
-                events.add(event);
+                myEvents.add(myEvent);
 
-                Collections.sort(events);
+                Collections.sort(myEvents);
 
                 adapter.notifyDataSetChanged();
                 checkIfDataEmpty();
@@ -159,26 +158,26 @@ public class MyEventsFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Event event = dataSnapshot.getValue(Event.class);
-                event.setId(Long.valueOf(dataSnapshot.getKey()));
+                MyEvent myEvent = dataSnapshot.getValue(MyEvent.class);
+                myEvent.setEvent_id((dataSnapshot.getKey()));
 
-                int i = events.indexOf(event);
+                int i = myEvents.indexOf(myEvent);
 
-                events.set(i, event);
-                Collections.sort(events);
+                myEvents.set(i, myEvent);
+                Collections.sort(myEvents);
 
                 adapter.notifyItemChanged(i);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Event event = dataSnapshot.getValue(Event.class);
-                event.setId(Long.valueOf(dataSnapshot.getKey()));
+                MyEvent myEvent = dataSnapshot.getValue(MyEvent.class);
+                myEvent.setEvent_id((dataSnapshot.getKey()));
 
-                int position = events.indexOf(event);
+                int position = myEvents.indexOf(myEvent);
 
-                events.remove(position);
-                Collections.sort(events);
+                myEvents.remove(position);
+                Collections.sort(myEvents);
 
                 adapter.notifyItemRemoved(position);
                 recycler.removeViewAt(position);
@@ -199,7 +198,7 @@ public class MyEventsFragment extends Fragment {
     }
 
     private void checkIfDataEmpty(){
-        if (events.isEmpty()){
+        if (myEvents.isEmpty()){
             recycler.setVisibility(View.INVISIBLE);
             tVNoData.setVisibility(View.VISIBLE);
         } else {

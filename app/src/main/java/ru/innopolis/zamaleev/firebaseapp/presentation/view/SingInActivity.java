@@ -22,7 +22,7 @@ public class SingInActivity extends AppCompatActivity {
 
     private EditText email, password;
     private TextInputLayout emailLayout, passwordLayout;
-
+    private String notification;
     private SignInInteractor signInInteractor;
 
     @Override
@@ -38,6 +38,13 @@ public class SingInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+
+        Intent startingIntent = getIntent();
+        if (startingIntent != null) {
+            notification = startingIntent.getStringExtra("newEvent"); // Retrieve the id
+
+        }
+
         mAuthListener = firebaseAuth -> {
 
             FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -47,6 +54,8 @@ public class SingInActivity extends AppCompatActivity {
                 Log.d(ON_AUTH, "onAuthStateChanged:signed_in:" + user.getUid());
 
                 Intent intent = new Intent(SingInActivity.this, MainActivity.class);
+                if (notification != null)
+                    intent.putExtra("newEvent", notification);
                 startActivity(intent);
             } else {
                 // User is signed out
@@ -66,7 +75,7 @@ public class SingInActivity extends AppCompatActivity {
         findViewById(R.id.btn_sign_in).setOnClickListener(v -> submit());
     }
 
-    private void submit(){
+    private void submit() {
         signInInteractor.signIn(email, password, emailLayout, passwordLayout);
     }
 
