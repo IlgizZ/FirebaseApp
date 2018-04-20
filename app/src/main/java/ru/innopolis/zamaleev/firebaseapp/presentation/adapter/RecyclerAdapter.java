@@ -1,4 +1,4 @@
-package ru.innopolis.zamaleev.firebaseapp.adapter;
+package ru.innopolis.zamaleev.firebaseapp.presentation.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ru.innopolis.zamaleev.firebaseapp.EventActivity;
 import ru.innopolis.zamaleev.firebaseapp.R;
-import ru.innopolis.zamaleev.firebaseapp.model.Event;
+import ru.innopolis.zamaleev.firebaseapp.data.entity.Event;
 
 /**
  * Created by Ilgiz on 02.06.2017.

@@ -1,9 +1,11 @@
-package ru.innopolis.zamaleev.firebaseapp.model;
+package ru.innopolis.zamaleev.firebaseapp.data.entity;
 
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Ilgiz on 25.05.2017.
@@ -88,6 +90,21 @@ public class Event implements Comparable, Serializable {
 
     @Override
     public int compareTo(@NonNull Object o) {
-        return name.compareTo(((Event) o).getName());
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        Date dateThis;
+        Date dateObj;
+        try {
+            dateThis = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        try {
+            dateObj = format.parse(((Event) o).getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 1;
+        }
+        return dateThis.compareTo(dateObj);
     }
 }

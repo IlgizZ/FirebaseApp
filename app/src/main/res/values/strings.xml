@@ -1,15 +1,38 @@
 <resources>
     <string name="app_name">FirebaseApp</string>
+
     <string name="hint_date">Date (DD-MM-YYYY)</string>
     <string name="hint_description">Description</string>
+    <string name="hint_location">Location</string>
+    <string name="hint_password">Password</string>
     <string name="hint_tag">Tag</string>
+    <string name="hint_email_username">Email or Username</string>
+
+
     <string name="tag_entertainment">Entertainment</string>
     <string name="tag_tourism">Tourism</string>
+
     <string name="btn_create">Create</string>
+
     <string name="err_msg_name">Please enter a Name</string>
+    <string name="err_msg_email">Please enter a Email or Username</string>
+    <string name="err_msg_description">Please enter a description</string>
     <string name="err_msg_required">Valid Input Required</string>
-    <string name="err_msg_city">Enter a City</string>
+    <string name="err_msg_location">Please choose a location</string>
     <string name="err_msg_password">Enter a Password</string>
+    <string name="err_msg_people_count">Enter a people count!</string>
     <string name="err_msg_dob">Enter a valid D.O.B</string>
+    <string name="err_msg_no_such_email_user">Authorization filed! No such email or username.</string>
+
     <string name="no_data">Events doesn\'t found</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_profile">My profile</string>
+    <string name="title_search">Search</string>
+    <string name="title_notification">Notifications</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_new_event">Create</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="hint_people_count">Required people count</string>
+
 </resources>

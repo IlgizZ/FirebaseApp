@@ -1,21 +1,42 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--<item name="buttonStyle">@style/AppTheme.MyButton</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowTranslucentStatus">true</item>
-
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
+    <style name="AuthStyle" parent="Theme.AppCompat.Light">
+
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+
+        <!--Edittext-->
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <!--Edittext-->
+        <item name="android:textColorSecondary">@color/white</item>
+
+        <!--TextView-->
+        <item name="android:textColorTertiary">@color/white</item>
+
+        <item name="android:textColorHint">@color/white</item>
+
+    </style>
     <style name="MyButton" parent="Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/colorCyan</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="counterText">"@colors/"</style>
+
+    <style name="counterOverride"></style>
 
 </resources>

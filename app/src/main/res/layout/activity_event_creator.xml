@@ -2,15 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
-        >
+        android:padding="24dp">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/event_creator_layout_name"
@@ -27,19 +25,58 @@
                 android:hint="Name" />
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/event_creator_layout_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <EditText
+                    android:id="@+id/event_creator_location_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/hint_location" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/event_creator_location_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:text="Map"
+                android:textSize="14sp"
+                android:theme="@style/MyButton" />
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <ImageView
+            android:id="@+id/map_snapshot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/event_creator_layout_city"
+            android:id="@+id/event_creator_layout_people_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp">
 
             <EditText
-                android:id="@+id/event_creator_city"
+                android:id="@+id/people_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="City" />
+                android:text="10"
+                android:inputType="number"
+                android:hint="@string/hint_people_count"/>
+
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -57,51 +94,6 @@
                 android:hint="@string/hint_description" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/event_creator_layout_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp">
-
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="com.example.androidsos.tutorial_datetimepickers.MainActivity">
-
-                <TextView
-
-                    android:id="@+id/tv_date"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Time"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/btn_datePicker"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="50dp"
-                    android:text="Date Picker" />
-
-                <Button
-                    android:id="@+id/btn_timePicker"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/btn_datePicker"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="Time Picker" />
-
-            </RelativeLayout>
-        </android.support.design.widget.TextInputLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,7 +109,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/tv_begin_date"
+                android:id="@+id/btn_datePicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -127,7 +119,7 @@
 
             <TextView
 
-                android:id="@+id/tv_begin_time"
+                android:id="@+id/btn_timePicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -136,6 +128,7 @@
                 android:textSize="20dp" />
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -188,6 +181,7 @@
                 android:textSize="20dp" />
 
             <RadioGroup
+                android:id="@+id/tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_tag"
@@ -207,6 +201,7 @@
                     android:text="@string/tag_tourism" />
             </RadioGroup>
         </RelativeLayout>
+
 
         <Button
             android:id="@+id/btn_create"
